@@ -69,6 +69,9 @@ endlocal
 
 
 goto annotation
+功能：将一个未签名的包，先进行4K对齐，然后签名
+
+
 使用示范
 zs -src C:\Users\hsf\Documents\Daisy_keys\signsomething\加固后，无签名\GSF6_231113_1758_301_jiagu.apk -ks C:\Users\hsf\Documents\Daisy_keys\signsomething\inquiredemand.jks -alias seeabout -kspass dsgf5we4w48r8344sadf4a4ewf -aliaspass dsgf5we4w48r8344sadf4a4ewf -toolsdir C:\Users\hsf\AppData\Local\Android\Sdk\build-tools\34.0.0
 
