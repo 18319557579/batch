@@ -33,7 +33,7 @@ if defined phoneStoreDir (echo var=%phoneStoreDir%) else echo var尚未定义
 
 
 ::1 先判断在手机中是否有存放目录，如果没有则新建一个
-if not defined phoneStoreDir (set phoneStoreDir=/sdcard/node_new/)
+if not defined phoneStoreDir (set phoneStoreDir=/sdcard/node_new)
 if defined phoneStoreDir (echo var=%phoneStoreDir%) else echo var尚未定义
 
 call adb shell test -e %phoneStoreDir%
@@ -51,17 +51,18 @@ if not defined fileName (
     echo timeStr:!timeStr!, fileName:!fileName!
 )
 
-
-echo 输出手机中的路径: %phoneStoreDir%%fileName%.xml
-call adb shell /system/bin/uiautomator dump --compressed %phoneStoreDir%%fileName%.xml
+echo 输出手机中的路径: %phoneStoreDir%/%fileName%.xml
+call adb shell /system/bin/uiautomator dump --compressed %phoneStoreDir%/%fileName%.xml
 echo 错误码2: %errorlevel%
 if %errorlevel% geq 1 (
     echo -*- dump error
     goto :eof
 )
 
+
 ::3 将xml文件从手机中拉取到电脑中
-call adb pull /sdcard/node_new/ui_weixin_10.xml C:\Users\hsf\Documents\phone_node_info
+if not defined computerStoreDdir (set computerStoreDdir=C:\Users\hsf\Documents\phone_node_info)
+call adb pull %phoneStoreDir%/%fileName%.xml %computerStoreDdir%
 echo 错误码3: %errorlevel%
 if %errorlevel% geq 1 (
     echo -*- pull error
@@ -69,8 +70,14 @@ if %errorlevel% geq 1 (
 )
 
 ::4 用自己的Gradle插件resolveNodeXml解析xml文件，生成简要的txt
-cd C:\Users\hsf\AndroidStudioProjects\Test_422
-call gradlew resolveNodeXml -PinputFile=C:\Users\hsf\Documents\phone_node_info\ui_weixin_10.xml -Dorg.gradle.java.home=C:\Users\hsf\.jdks\corretto-11.0.21
+if not defined resolvePluginDir (
+    echo 没传插件的路径，那么不进行解析的工作
+    goto :eof
+)
+
+@REM cd C:\Users\hsf\AndroidStudioProjects\Test_422
+cd %resolvePluginDir%
+call gradlew resolveNodeXml -PinputFile=%computerStoreDdir%\%fileName%.xml -PoutputFile=%outputTxtDir% -Dorg.gradle.java.home=C:\Users\hsf\.jdks\corretto-11.0.21
 echo 错误4: %errorlevel%
 if %errorlevel% geq 1 (
     echo -*- resolveNodeXml error
@@ -96,10 +103,10 @@ endlocal
 goto annotation
 功能：将一个未签名的包，先进行4K对齐，然后签名
 
-1 -phoneStoreDir 手机中的存储目录，可不传，不传就用设定好的
+1 -phoneStoreDir 手机中的存储目录，可不传，不传就用设定好的（结尾要带/）
 2 -fileName 文件名，可不传，不传就随机生成
-2 -computerStoreDdir 电脑中的存储路径，必传
-3 -resolvePluginDir 解析xml文件的Gradle插件路径，可不传，不传的话就不进行解析
-4 -outputTxtDir 解析成txt文件的路径，可不传
+2 -computerStoreDdir 电脑中的存储路径，必传（结尾不用带\）
+3 -resolvePluginDir 解析xml文件的Gradle插件路径，可不传，不传的话就不进行解析（结尾不用带\）
+4 -outputTxtDir 解析成txt文件的路径，可不传（要文件路径，不是文件夹的）
 
 :annotation
