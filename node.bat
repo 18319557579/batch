@@ -24,12 +24,11 @@ IF NOT "%1"=="" (
     GOTO :loop
 )
 
-echo phoneStoreDir: %phoneStoreDir%
-echo computerStoreDdir: %computerStoreDdir%
-echo resolvePluginDir: %resolvePluginDir%
-echo outputTxtDir: %outputTxtDir%
-
-if defined phoneStoreDir (echo var=%phoneStoreDir%) else echo var尚未定义
+if defined phoneStoreDir (echo phoneStoreDir=%phoneStoreDir%) else echo phoneStoreDir尚未定义
+if defined fileName (echo fileName=%fileName%) else echo fileName尚未定义
+if defined computerStoreDdir (echo computerStoreDdir=%computerStoreDdir%) else echo computerStoreDdir尚未定义
+if defined resolvePluginDir (echo resolvePluginDir=%resolvePluginDir%) else echo resolvePluginDir尚未定义
+if defined outputTxtDir (echo outputTxtDir=%outputTxtDir%) else echo outputTxtDir尚未定义
 
 
 ::1 先判断在手机中是否有存放目录，如果没有则新建一个
@@ -42,13 +41,13 @@ if %errorlevel% geq 1 (
     call adb shell mkdir %phoneStoreDir%
 ) 
 
-
 ::2 将当前页面的节点生成一个xml文件，并保存到手机的存放目录中
+set timeStr=
+call :getTimeStr timeStr
 if not defined fileName (
-    set timeStr=
-    call :getTimeStr timeStr
-    set fileName=node_!timeStr!
-    echo timeStr:!timeStr!, fileName:!fileName!
+    set fileName=node_%timeStr%
+) else (
+    set fileName=!fileName!_%timeStr%
 )
 
 echo 输出手机中的路径: %phoneStoreDir%/%fileName%.xml
@@ -58,7 +57,6 @@ if %errorlevel% geq 1 (
     echo -*- dump error
     goto :eof
 )
-
 
 ::3 将xml文件从手机中拉取到电脑中
 if not defined computerStoreDdir (set computerStoreDdir=C:\Users\hsf\Documents\phone_node_info)
@@ -103,8 +101,8 @@ endlocal
 goto annotation
 功能：将一个未签名的包，先进行4K对齐，然后签名
 
-1 -phoneStoreDir 手机中的存储目录，可不传，不传就用设定好的（结尾要带/）
-2 -fileName 文件名，可不传，不传就随机生成
+1 -phoneStoreDir 手机中的存储目录，用正斜杠/来分割路径，结尾无需/。可不传，不传就用预设的
+2 -fileName 文件名，不要带扩展名，因为后面会从xml变为txt。可不传，不传就用"node_当前时间"
 2 -computerStoreDdir 电脑中的存储路径，必传（结尾不用带\）
 3 -resolvePluginDir 解析xml文件的Gradle插件路径，可不传，不传的话就不进行解析（结尾不用带\）
 4 -outputTxtDir 解析成txt文件的路径，可不传（要文件路径，不是文件夹的）
