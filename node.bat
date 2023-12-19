@@ -101,10 +101,10 @@ endlocal
 goto annotation
 功能：将一个未签名的包，先进行4K对齐，然后签名
 
-1 -phoneStoreDir 手机中的存储目录，用正斜杠/来分割路径，结尾无需/。可不传，不传就用预设的
-2 -fileName 文件名，不要带扩展名，因为后面会从xml变为txt。可不传，不传就用"node_当前时间"
-2 -computerStoreDdir 电脑中的存储路径，必传（结尾不用带\）
-3 -resolvePluginDir 解析xml文件的Gradle插件路径，可不传，不传的话就不进行解析（结尾不用带\）
-4 -outputTxtDir 解析成txt文件的路径，可不传（要文件路径，不是文件夹的）
+1 -phoneStoreDir 手机中的存储文件夹路径，用正斜杠/来分割路径，结尾无需/。可以不传，不传就用预设的
+2 -fileName 文件名，不要带扩展名，因为后面会从xml变为txt。可以不传，不传就用"node_当前时间"
+2 -computerStoreDdir 电脑中的存储文件夹路径，用反斜杠\来分割路径，结尾无需\。可以不传，不传就用预设的
+3 -resolvePluginDir 解析xml文件的Gradle插件文件夹路径，用反斜杠\来分割路径，结尾无需\。可以不传，不传的话就不进行解析（结尾不用带\）
+4 -outputTxtDir 解析成txt文件的路径，是文件路径，不是文件夹的。可以不传，不传就在xml的路径下创建一个文件夹存放
 
 :annotation
