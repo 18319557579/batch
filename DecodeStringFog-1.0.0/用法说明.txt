@@ -1,0 +1,6 @@
+功能：将java文件中的StringFog批量解密，并保留原来的目录结构
+
+用法说明：
+1.将需要解密的.java文件放置到根目录的SOURCE_CIPHERTEXT文件夹中，待解密的文件可以包含目录结构；
+2.点击StartDecode.bat开始执行程序（前提有java环境）；
+3.程序执行完成后，会在根目录中生成TARGET_PLAINTEXT文件夹，里面放置了解密后的文件，并保留原来的目录结构。
